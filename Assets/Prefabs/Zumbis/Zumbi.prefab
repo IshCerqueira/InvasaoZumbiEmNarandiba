@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 2669248754129352495}
   - component: {fileID: 8510156543390045945}
   - component: {fileID: 7660772829660179430}
+  - component: {fileID: 7221348382940960975}
   m_Layer: 0
   m_Name: Zumbi
   m_TagString: Inimigo
@@ -341,6 +342,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.15, y: 0.3}
   m_EdgeRadius: 0
+--- !u!95 &7221348382940960975
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6359355151160176166}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a4296bae257c4534d9be75684275dd17, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8634728535570299591
 GameObject:
   m_ObjectHideFlags: 0

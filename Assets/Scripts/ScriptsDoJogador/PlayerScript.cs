@@ -8,7 +8,7 @@ using TMPro;
 public class PlayerScript : MonoBehaviour
 {
 
-    [SerializeField] private float moveSpeed;
+    
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Animator animator;
@@ -23,8 +23,13 @@ public class PlayerScript : MonoBehaviour
 
     public GameObject deadPlayerPrefab;
     public GameObject deadEndScreen;
+    private bool timerIsRunning = false;
 
     [SerializeField] private Image lifeBar;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float timeRemaining = 1200f; 
+    [SerializeField] private TextMeshProUGUI timerText;  
+
 
     // Start is called before the first frame update
     void Start()
@@ -34,19 +39,22 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         moveSpeed = 1;
+        timerIsRunning = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        TimerInAction();
         rb.velocity = moveInput * moveSpeed;
         if (isWalking && moveSpeed != 0)
         {
             Vector3 vector3 = Vector3.left * moveInput.y + Vector3.up * moveInput.x;
             aim.rotation = Quaternion.LookRotation(Vector3.forward, vector3);
         }
-        
+
     }
+
 
     public void Move(InputAction.CallbackContext context)
     {
@@ -77,6 +85,32 @@ public class PlayerScript : MonoBehaviour
  
     }
 
+    public void TimerInAction()
+    {
+        if (timerIsRunning)
+        {
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;  
+                UpdateTimerDisplay(timeRemaining);
+            }
+            else
+            {
+                timeRemaining = 0; 
+                timerIsRunning = false;
+                UpdateTimerDisplay(timeRemaining);
+                deadEndScreen.SetActive(true);
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    public void UpdateTimerDisplay(float currentTime)
+    {
+        float minutes = Mathf.FloorToInt(currentTime / 60);
+        float seconds = Mathf.FloorToInt(currentTime % 60);
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
 
     public void ToogleMoveSpeed()
     {
