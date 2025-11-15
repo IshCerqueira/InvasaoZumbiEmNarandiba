@@ -10,11 +10,12 @@ public class ZumbiScript : MonoBehaviour
     private Transform target;
     private Vector2 moveDirection;
     private bool agroRange = false;
-    public bool explosive, fast;
+    public bool  fast;
     private Transform zumbiDistance;
 
     public GameObject deadZombiePrefab;
 
+ 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerScript _playerScript;
 

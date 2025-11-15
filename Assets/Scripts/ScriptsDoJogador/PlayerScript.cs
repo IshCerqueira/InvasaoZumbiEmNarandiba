@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -12,13 +14,22 @@ public class PlayerScript : MonoBehaviour
     private Animator animator;
     private int health;
     private int score;
+    public TextMeshProUGUI countText;
 
+
+    private Transform playerPosition;
     public Transform aim;
     private bool isWalking = false;
+
+    public GameObject deadPlayerPrefab;
+    public GameObject deadEndScreen;
+
+    [SerializeField] private Image lifeBar;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerPosition = GetComponent<Transform>(); 
         health = 10;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -83,15 +94,26 @@ public class PlayerScript : MonoBehaviour
     {
         Debug.Log("ui");
         health -= damage;
-        if(health <= 0)
+      
+        lifeBar.fillAmount = (health / 10f);
+
+        Debug.Log(lifeBar.fillAmount);
+        if (health <= 0)
         {
             Debug.Log("Its over");
+            Vector2 prefabPosition = new Vector2(playerPosition.position.x, playerPosition.position.y);
+            GameObject deadPlayerBody = Instantiate(deadPlayerPrefab, prefabPosition, Quaternion.identity);
+            deadEndScreen.SetActive(true);
+            Destroy(gameObject);
         }
+         
     }
 
     public void IncrementScore()
     {
         score++;
-        Debug.Log(score);
+        countText.text = score.ToString();
     }
+
+   
 }

@@ -5,24 +5,37 @@ using UnityEngine;
 public class AtaqueDoZumbi : MonoBehaviour
 {
     public bool onRange = false;
+    public bool explosive = false;
     private int baseDamage = 2;
+
+    public GameObject explosionRadius;
 
     [SerializeField] PlayerScript _playerScript;
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && !explosive)
         {
             _playerScript = other.GetComponent<PlayerScript>();
             onRange = true;
             StartCoroutine(DamageCount());
 
         }
+        else if(other.gameObject.tag == "Player" && explosive)
+        {
+   
+            onRange = true;
+            StartCoroutine(ExplosionTime());
+        }
     }
 
     public void OnTriggerExit2D(Collider2D other)
     {
-        onRange = false;
+        if(other.gameObject.tag == "Player")
+        {
+            onRange = false;
+        }
+
     }
 
     IEnumerator DamageCount()
@@ -36,5 +49,14 @@ public class AtaqueDoZumbi : MonoBehaviour
         }
      
 
+    }
+
+    IEnumerator ExplosionTime()
+    {
+        yield return new WaitForSeconds(1.5f);
+        if (onRange)
+        {
+            explosionRadius.SetActive(true);
+        }
     }
 }
