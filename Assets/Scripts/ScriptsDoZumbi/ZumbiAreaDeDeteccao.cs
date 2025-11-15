@@ -13,6 +13,7 @@ public class ZumbiAreaDeDeteccao : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             _zumbiScript.SetAgro();
+            Destroy(gameObject);
              
         }
     }
