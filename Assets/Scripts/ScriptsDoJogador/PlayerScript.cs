@@ -131,7 +131,6 @@ public class PlayerScript : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        Debug.Log("ui");
         health -= damage;
       
         lifeBar.fillAmount = (health / 10f);

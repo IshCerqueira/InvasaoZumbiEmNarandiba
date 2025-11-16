@@ -12,6 +12,7 @@ public class ZumbiScript : MonoBehaviour
     private bool agroRange = false;
     public bool  fast;
     private Transform zumbiDistance;
+    private Animator animator;
 
     public GameObject deadZombiePrefab;
 
@@ -31,6 +32,7 @@ public class ZumbiScript : MonoBehaviour
         moveSpeed = 0.4f;
         health = maxHealth;
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        animator = GetComponent<Animator>();
 
         if (fast)
         {
@@ -54,12 +56,19 @@ public class ZumbiScript : MonoBehaviour
         if (target && agroRange)
         {
             rb.velocity = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
+            MoveAnimation();
         }
+    }
+
+    public void MoveAnimation()
+    {
+        animator.SetBool("IsWalking", true);
+        animator.SetFloat("InputX", moveDirection.x);
+        animator.SetFloat("InputY", moveDirection.y);
     }
 
     public void TakeDamage( float damage)
     {
-        Debug.Log("ai");
         health -= damage;
         if(health <= 0)
         {
