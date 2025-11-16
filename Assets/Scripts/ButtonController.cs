@@ -14,4 +14,17 @@ public class ButtonController : MonoBehaviour
     {
         SceneManager.LoadScene("Menu");
     }
+
+    public void OnClickIntro()
+    {
+        SceneManager.LoadScene("IntroCutscene");
+    }
+
+    public void OnExitClick()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Application.Quit();
+    }
 }

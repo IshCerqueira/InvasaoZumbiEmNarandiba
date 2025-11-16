@@ -15,7 +15,8 @@ public class PlayerScript : MonoBehaviour
     private int health;
     private int score;
     public TextMeshProUGUI countText;
-
+    public TextMeshProUGUI killCount;
+    public TextMeshProUGUI timeCount;
 
     private Transform playerPosition;
     public Transform aim;
@@ -23,11 +24,14 @@ public class PlayerScript : MonoBehaviour
 
     public GameObject deadPlayerPrefab;
     public GameObject deadEndScreen;
+    public GameObject WinScreen;
+    public GameObject gameUI;
     private bool timerIsRunning = false;
 
     [SerializeField] private Image lifeBar;
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float timeRemaining = 1200f; 
+    [SerializeField] private float timeRemaining = 1200f;
+    [SerializeField] private float timeOnGoing = 0f;
     [SerializeField] private TextMeshProUGUI timerText;  
 
 
@@ -91,24 +95,25 @@ public class PlayerScript : MonoBehaviour
         {
             if (timeRemaining > 0)
             {
-                timeRemaining -= Time.deltaTime;  
-                UpdateTimerDisplay(timeRemaining);
+                timeRemaining -= Time.deltaTime;
+                timeOnGoing += Time.deltaTime;
+                UpdateTimerDisplay();
             }
             else
             {
                 timeRemaining = 0; 
                 timerIsRunning = false;
-                UpdateTimerDisplay(timeRemaining);
+                UpdateTimerDisplay();
                 deadEndScreen.SetActive(true);
                 Destroy(gameObject);
             }
         }
     }
 
-    public void UpdateTimerDisplay(float currentTime)
+    public void UpdateTimerDisplay()
     {
-        float minutes = Mathf.FloorToInt(currentTime / 60);
-        float seconds = Mathf.FloorToInt(currentTime % 60);
+        float minutes = Mathf.FloorToInt(timeRemaining / 60);
+        float seconds = Mathf.FloorToInt(timeRemaining % 60);
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
@@ -137,6 +142,7 @@ public class PlayerScript : MonoBehaviour
             Debug.Log("Its over");
             Vector2 prefabPosition = new Vector2(playerPosition.position.x, playerPosition.position.y);
             GameObject deadPlayerBody = Instantiate(deadPlayerPrefab, prefabPosition, Quaternion.identity);
+            timerIsRunning = false;
             deadEndScreen.SetActive(true);
             Destroy(gameObject);
         }
@@ -147,6 +153,19 @@ public class PlayerScript : MonoBehaviour
     {
         score++;
         countText.text = score.ToString();
+    }
+
+    public void WinSequence()
+    {
+        WinScreen.SetActive(true);
+        gameUI.SetActive(false);
+        timerIsRunning = false;
+        float minutes = Mathf.FloorToInt(timeOnGoing / 60);
+        float seconds = Mathf.FloorToInt(timeOnGoing % 60);
+        timeCount.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        killCount.text = score.ToString();
+
+        Destroy(gameObject);
     }
 
    
