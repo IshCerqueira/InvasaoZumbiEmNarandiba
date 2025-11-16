@@ -21,6 +21,7 @@ public class PlayerScript : MonoBehaviour
     private Transform playerPosition;
     public Transform aim;
     private bool isWalking = false;
+    private bool transformationActive = false;
 
     public GameObject deadPlayerPrefab;
     public GameObject deadEndScreen;
@@ -29,10 +30,12 @@ public class PlayerScript : MonoBehaviour
     private bool timerIsRunning = false;
 
     [SerializeField] private Image lifeBar;
+    [SerializeField] private Image transformationBar;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float timeRemaining = 1200f;
     [SerializeField] private float timeOnGoing = 0f;
-    [SerializeField] private TextMeshProUGUI timerText;  
+    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private RuntimeAnimatorController[] CharacterModes;
 
 
     // Start is called before the first frame update
@@ -89,7 +92,20 @@ public class PlayerScript : MonoBehaviour
  
     }
 
-    public void TimerInAction()
+    public void Transforming(InputAction.CallbackContext context)
+    {
+        if (transformationBar.fillAmount >= 1 && !transformationActive)
+        {
+            transformationActive = true;
+            animator.runtimeAnimatorController = CharacterModes[1];
+            moveSpeed = 2f;
+
+            StartCoroutine(TransformationBarPercentageDown());
+
+        }
+    }
+
+        public void TimerInAction()
     {
         if (timerIsRunning)
         {
@@ -121,9 +137,13 @@ public class PlayerScript : MonoBehaviour
     {
         if(moveSpeed == 0)
         {
-            moveSpeed = 1;
+            if (TransformedPlayer())
+            {
+                moveSpeed = 2f;
+            }
+            else moveSpeed = 1f;
         }
-        else if(moveSpeed == 1)
+        else if(moveSpeed != 0)
         {
             moveSpeed = 0;
         }
@@ -131,11 +151,10 @@ public class PlayerScript : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
-      
+        health -= damage;      
         lifeBar.fillAmount = (health / 10f);
+        EarnTransformationPoints(0.1f);
 
-        Debug.Log(lifeBar.fillAmount);
         if (health <= 0)
         {
             Debug.Log("Its over");
@@ -151,6 +170,7 @@ public class PlayerScript : MonoBehaviour
     public void IncrementScore()
     {
         score++;
+        EarnTransformationPoints(0.2f);
         countText.text = score.ToString();
     }
 
@@ -167,5 +187,44 @@ public class PlayerScript : MonoBehaviour
         Destroy(gameObject);
     }
 
-   
+    public void EarnTransformationPoints(float amount)
+    {
+        if (!transformationActive && transformationBar.fillAmount != 1)
+        {
+            transformationBar.fillAmount += amount;
+        }    
+    }
+
+    public bool TransformedPlayer()
+    {
+        if (transformationActive)
+        {
+            return true;
+        }
+
+        else return false;
+    }
+
+    IEnumerator TransformationBarPercentageDown()
+    {
+        while (transformationBar.fillAmount != 0)
+        {
+            transformationBar.fillAmount = Mathf.Lerp(transformationBar.fillAmount, transformationBar.fillAmount -= 0.1f, Time.deltaTime );
+           
+            yield return null;
+
+
+        }
+
+        if (transformationBar.fillAmount <= 0)
+        {
+            transformationActive = false;
+            animator.runtimeAnimatorController = CharacterModes[0];
+            moveSpeed = 1f;
+        }
+
+
+    }
+
+
 }

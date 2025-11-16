@@ -15,8 +15,8 @@ public class ZumbiScript : MonoBehaviour
     private Animator animator;
 
     public GameObject deadZombiePrefab;
+   
 
- 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private PlayerScript _playerScript;
 
@@ -32,6 +32,7 @@ public class ZumbiScript : MonoBehaviour
         moveSpeed = 0.4f;
         health = maxHealth;
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        _playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
         animator = GetComponent<Animator>();
 
         if (fast)
