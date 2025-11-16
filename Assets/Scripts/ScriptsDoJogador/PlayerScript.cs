@@ -14,14 +14,18 @@ public class PlayerScript : MonoBehaviour
     private Animator animator;
     private int health;
     private int score;
+    private int chestScore;
     public TextMeshProUGUI countText;
     public TextMeshProUGUI killCount;
     public TextMeshProUGUI timeCount;
+    public TextMeshProUGUI chestCount;
 
     private Transform playerPosition;
     public Transform aim;
     private bool isWalking = false;
     private bool transformationActive = false;
+    private bool interactable = false;
+    private bool interactionTime = false;
 
     public GameObject deadPlayerPrefab;
     public GameObject deadEndScreen;
@@ -105,7 +109,15 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-        public void TimerInAction()
+    public void Interacting(InputAction.CallbackContext context)
+    {
+        if (interactable)
+        {
+            ToggleInteractionTime();
+        }
+    }
+
+    public void TimerInAction()
     {
         if (timerIsRunning)
         {
@@ -133,7 +145,7 @@ public class PlayerScript : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-    public void ToogleMoveSpeed()
+    public void ToggleMoveSpeed()
     {
         if(moveSpeed == 0)
         {
@@ -183,6 +195,7 @@ public class PlayerScript : MonoBehaviour
         float seconds = Mathf.FloorToInt(timeOnGoing % 60);
         timeCount.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         killCount.text = score.ToString();
+        chestCount.text = chestScore.ToString();
 
         Destroy(gameObject);
     }
@@ -204,6 +217,39 @@ public class PlayerScript : MonoBehaviour
 
         else return false;
     }
+
+    public bool GetInteractionTime()
+    {
+        return interactionTime;
+    }
+
+    public void ToggleInteractionTime()
+    {
+        interactionTime = !interactionTime;
+    }
+
+    public bool GetInteract()
+    {
+        return interactable;
+    }
+    public void ToggleInteract()
+    {
+        interactable = !interactable;
+    }
+
+    public void PlayerHeal(int amount)
+    {
+        chestScore++;
+        health += amount;
+        if(health > 10)
+        {
+            health = 10;
+            lifeBar.fillAmount = (health / 10f);
+        }
+        else lifeBar.fillAmount = (health / 10f);
+
+    }
+
 
     IEnumerator TransformationBarPercentageDown()
     {

@@ -33,7 +33,7 @@ public class AtaqueScript : MonoBehaviour
         if (!isAttacking)
         {
             animator.SetBool("IsAttacking", true);
-            _playerScript.ToogleMoveSpeed();
+            _playerScript.ToggleMoveSpeed();
             melee.SetActive(true);
             isAttacking = true;
                 
@@ -51,7 +51,7 @@ public class AtaqueScript : MonoBehaviour
                 atkTimer = 0;
                 isAttacking = false;
                 animator.SetBool("IsAttacking", false);
-                _playerScript.ToogleMoveSpeed();
+                _playerScript.ToggleMoveSpeed();
                 melee.SetActive(false);
 
             }
